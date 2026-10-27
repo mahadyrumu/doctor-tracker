@@ -128,7 +128,7 @@ export default function NewDoctorPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-600 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shadow-sm">
               <UserPlus className="w-5 h-5" />
             </div>
             <div>
@@ -181,7 +181,7 @@ export default function NewDoctorPage() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.name
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                   disabled={isSubmitting}
                 />
@@ -213,7 +213,7 @@ export default function NewDoctorPage() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.specialization
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                   disabled={isSubmitting}
                 />
@@ -249,7 +249,7 @@ export default function NewDoctorPage() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.hospital
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                   disabled={isSubmitting}
                 />
@@ -276,7 +276,7 @@ export default function NewDoctorPage() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.phone
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                   disabled={isSubmitting}
                 />
@@ -303,7 +303,7 @@ export default function NewDoctorPage() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.email
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                   disabled={isSubmitting}
                 />

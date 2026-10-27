@@ -94,7 +94,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
         <button
           type="button"
           onClick={onMenuToggle}
-          className="lg:hidden p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          className="lg:hidden p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           aria-label="Open navigation menu"
         >
           <Menu className="w-5 h-5" />
@@ -117,22 +117,22 @@ export function Header({ onMenuToggle }: HeaderProps) {
           <button
             type="button"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-2.5 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl hover:bg-slate-100/80 focus:outline-none focus:ring-2 focus:ring-teal-500/30 transition-all select-none group"
+            className="flex items-center gap-2.5 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl hover:bg-slate-100/80 focus:outline-none focus:ring-2 focus:ring-blue-500/30 transition-all select-none group"
             aria-expanded={isDropdownOpen}
             aria-haspopup="true"
           >
-            <div className="w-8 h-8 rounded-full bg-slate-900 text-teal-300 font-semibold text-xs flex items-center justify-center ring-2 ring-teal-500/20 shadow-xs group-hover:scale-105 transition-transform">
+            <div className="w-8 h-8 rounded-full bg-slate-900 text-blue-300 font-semibold text-xs flex items-center justify-center ring-2 ring-blue-500/20 shadow-xs group-hover:scale-105 transition-transform">
               A
             </div>
             <div className="hidden md:block text-left">
-              <span className="text-xs font-semibold text-slate-900 block leading-tight group-hover:text-teal-700 transition-colors">
+              <span className="text-xs font-semibold text-slate-900 block leading-tight group-hover:text-blue-700 transition-colors">
                 Admin Portal
               </span>
               <span className="text-[10px] text-slate-400 block">Verified Session</span>
             </div>
             <ChevronDown
               className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                isDropdownOpen ? "rotate-180 text-teal-600" : ""
+                isDropdownOpen ? "rotate-180 text-blue-600" : ""
               }`}
             />
           </button>
@@ -149,7 +149,7 @@ export function Header({ onMenuToggle }: HeaderProps) {
                   <p className="text-xs font-bold text-slate-900 truncate">
                     Super Administrator
                   </p>
-                  <ShieldCheck className="w-3.5 h-3.5 text-teal-600 flex-shrink-0" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
                 </div>
                 <p className="text-[11px] text-slate-500 truncate mt-0.5">
                   admin@doctortracker.com
@@ -162,9 +162,9 @@ export function Header({ onMenuToggle }: HeaderProps) {
                 <Link
                   href="/profile"
                   onClick={() => setIsDropdownOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-teal-700 hover:bg-teal-50/80 rounded-lg transition-colors group"
+                  className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-700 hover:bg-blue-50/80 rounded-lg transition-colors group"
                 >
-                  <User className="w-4 h-4 text-slate-400 group-hover:text-teal-600 transition-colors" />
+                  <User className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
                   <span>Profile</span>
                 </Link>
 

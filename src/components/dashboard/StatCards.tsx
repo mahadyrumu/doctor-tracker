@@ -38,14 +38,14 @@ export function StatCards({
       value: totalDoctors.toLocaleString(),
       subtitle: "Active Medical Practitioners",
       icon: UserCheck,
-      iconBg: "bg-teal-500/10 text-teal-600 border border-teal-500/20",
+      iconBg: "bg-blue-500/10 text-blue-600 border border-blue-500/20",
     },
     {
       title: "Total Patients",
       value: totalPatients.toLocaleString(),
       subtitle: "Registered Clinical Patients",
       icon: Users,
-      iconBg: "bg-blue-500/10 text-blue-600 border border-blue-500/20",
+      iconBg: "bg-indigo-500/10 text-indigo-600 border border-indigo-500/20",
     },
     {
       title: "Patients per Doctor",

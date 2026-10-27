@@ -202,7 +202,7 @@ function PatientProfileContent() {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           {/* Avatar and Vital Data */}
           <div className="flex items-start sm:items-center gap-5">
-            <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-indigo-600 to-teal-600 text-white font-bold text-2xl sm:text-3xl flex items-center justify-center shadow-md flex-shrink-0">
+            <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-600 text-white font-bold text-2xl sm:text-3xl flex items-center justify-center shadow-md flex-shrink-0">
               {patient.name
                 .split(" ")
                 .map((n) => n[0])
@@ -291,7 +291,7 @@ function PatientProfileContent() {
         <Card className="p-6 bg-white border border-slate-200 shadow-sm space-y-5">
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-teal-600" />
+              <Activity className="w-5 h-5 text-blue-600" />
               Clinical Status & Care Tier
             </h2>
             <span className="text-xs font-medium text-slate-400">

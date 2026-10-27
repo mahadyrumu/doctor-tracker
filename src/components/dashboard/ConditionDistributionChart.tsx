@@ -23,8 +23,8 @@ interface ConditionDistributionChartProps {
 }
 
 const PALETTE = [
-  "#0d9488", // Teal
-  "#3b82f6", // Blue
+  "#2563eb", // Clinical Blue
+  "#0ea5e9", // Sky Blue
   "#8b5cf6", // Purple
   "#f59e0b", // Amber
   "#10b981", // Emerald
@@ -39,7 +39,7 @@ function CustomPieTooltip({ active, payload }: any) {
     return (
       <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-xl border border-slate-800 text-xs">
         <span className="font-semibold block text-white">{item.name}</span>
-        <span className="text-teal-400 font-bold">{item.value} patients</span>
+        <span className="text-blue-400 font-bold">{item.value} patients</span>
       </div>
     );
   }

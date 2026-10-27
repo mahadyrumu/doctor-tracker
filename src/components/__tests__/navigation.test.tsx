@@ -27,7 +27,7 @@ describe("UI Primitives & Navigation Structure", () => {
   });
 
   it("Badge renders with correct variant content", () => {
-    render(<Badge variant="teal">Cardiology</Badge>);
+    render(<Badge variant="blue">Cardiology</Badge>);
     expect(screen.getByText("Cardiology")).toBeDefined();
   });
 

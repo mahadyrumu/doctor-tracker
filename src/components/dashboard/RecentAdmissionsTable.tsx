@@ -53,7 +53,7 @@ export function RecentAdmissionsTable({
           </div>
           <Link
             href="/patients"
-            className="inline-flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-700 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
           >
             <span>View All Patients</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -84,7 +84,7 @@ export function RecentAdmissionsTable({
                     className="hover:bg-slate-50/80 transition-colors group"
                   >
                     <td className="py-3 pl-1">
-                      <span className="font-semibold text-slate-900 block group-hover:text-teal-600 transition-colors">
+                      <span className="font-semibold text-slate-900 block group-hover:text-blue-600 transition-colors">
                         {patient.name}
                       </span>
                       <span className="text-[11px] text-slate-400">
@@ -95,7 +95,7 @@ export function RecentAdmissionsTable({
                       {patient.doctorName}
                     </td>
                     <td className="py-3">
-                      <Badge variant="teal">{patient.condition}</Badge>
+                      <Badge variant="blue">{patient.condition}</Badge>
                     </td>
                     <td className="py-3 text-right pr-1 text-slate-500 font-medium">
                       <span className="inline-flex items-center gap-1">

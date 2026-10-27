@@ -71,8 +71,8 @@ export default function DashboardPage() {
             <h2 className="text-lg font-bold text-slate-900 tracking-tight">
               Administrative Overview
             </h2>
-            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200/60 px-2 py-0.5 rounded-full">
-              <Sparkles className="w-3 h-3 text-teal-600" />
+            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200/60 px-2 py-0.5 rounded-full">
+              <Sparkles className="w-3 h-3 text-blue-600" />
               <span>Real-Time Pipeline</span>
             </span>
           </div>
@@ -100,7 +100,7 @@ export default function DashboardPage() {
 
           <Link href="/doctors">
             <Button variant="outline" size="sm" className="text-xs">
-              <PlusCircle className="w-3.5 h-3.5 mr-1.5 text-teal-600" />
+              <PlusCircle className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
               <span>Doctors Directory</span>
             </Button>
           </Link>

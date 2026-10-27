@@ -115,7 +115,7 @@ function DoctorsContent() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
-            <Stethoscope className="w-6 h-6 text-teal-600" />
+            <Stethoscope className="w-6 h-6 text-blue-600" />
             <span>Doctor Management</span>
           </h1>
           <p className="text-sm text-slate-500 mt-0.5">
@@ -180,7 +180,7 @@ function DoctorsContent() {
           </div>
         ) : doctors.length === 0 ? (
           <div className="p-12 text-center space-y-3">
-            <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 mx-auto">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mx-auto">
               <Stethoscope className="w-6 h-6" />
             </div>
             <h3 className="text-base font-semibold text-slate-900">
@@ -223,11 +223,11 @@ function DoctorsContent() {
                         href={`/doctors/${doctor._id}`}
                         className="flex items-center gap-2.5 group/link"
                       >
-                        <div className="w-8 h-8 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
                           {doctor.name.replace(/^Dr\.\s*/, "").charAt(0)}
                         </div>
                         <div>
-                          <span className="font-bold text-slate-900 block group-hover/link:text-teal-600 transition-colors">
+                          <span className="font-bold text-slate-900 block group-hover/link:text-blue-600 transition-colors">
                             {doctor.name}
                           </span>
                           <span className="text-[11px] text-slate-400">
@@ -238,7 +238,7 @@ function DoctorsContent() {
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <Badge variant="teal">{doctor.specialization}</Badge>
+                      <Badge variant="blue">{doctor.specialization}</Badge>
                     </td>
 
                     <td className="py-3.5 px-4 font-medium text-slate-700">
@@ -264,10 +264,10 @@ function DoctorsContent() {
                     <td className="py-3.5 px-4 text-center">
                       <Link
                         href={`/doctors/${doctor._id}`}
-                        className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 font-bold text-xs transition-colors"
+                        className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-bold text-xs transition-colors"
                         title="View assigned patient roster"
                       >
-                        <Users className="w-3 h-3 text-teal-600" />
+                        <Users className="w-3 h-3 text-blue-600" />
                         <span>{doctor.patientCount}</span>
                       </Link>
                     </td>
@@ -285,11 +285,11 @@ function DoctorsContent() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="text-xs h-8 px-2.5 text-teal-700 border-teal-200 hover:bg-teal-50 gap-1"
+                          className="text-xs h-8 px-2.5 text-blue-700 border-blue-200 hover:bg-blue-50 gap-1"
                         >
-                          <User className="w-3.5 h-3.5 text-teal-600" />
+                          <User className="w-3.5 h-3.5 text-blue-600" />
                           <span>View Profile</span>
-                          <ExternalLink className="w-3 h-3 text-teal-400 ml-0.5" />
+                          <ExternalLink className="w-3 h-3 text-blue-400 ml-0.5" />
                         </Button>
                       </Link>
                     </td>
@@ -355,7 +355,7 @@ export default function DoctorsPage() {
     <Suspense
       fallback={
         <div className="p-8 flex items-center justify-center">
-          <Loader2 className="w-6 h-6 animate-spin text-teal-600" />
+          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
         </div>
       }
     >

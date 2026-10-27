@@ -63,18 +63,18 @@ function LoginForm() {
   return (
     <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6 sm:p-8">
       {/* Quick Demo Access Box for Evaluators */}
-      <div className="mb-6 p-3.5 bg-teal-50/80 border border-teal-200/80 rounded-xl flex flex-col gap-2">
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-teal-900">
-          <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+      <div className="mb-6 p-3.5 bg-blue-50/80 border border-blue-200/80 rounded-xl flex flex-col gap-2">
+        <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-900">
+          <Sparkles className="w-3.5 h-3.5 text-blue-600" />
           <span>Reviewer Quick Access</span>
         </div>
-        <p className="text-xs text-teal-700 leading-relaxed">
+        <p className="text-xs text-blue-700 leading-relaxed">
           Click below to autofill pre-seeded Administrator credentials:
         </p>
         <button
           type="button"
           onClick={handleFillDemoCredentials}
-          className="w-full py-1.5 px-3 bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white text-xs font-medium rounded-lg transition-all duration-150 flex items-center justify-center gap-1.5 shadow-sm"
+          className="w-full py-1.5 px-3 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white text-xs font-medium rounded-lg transition-all duration-150 flex items-center justify-center gap-1.5 shadow-sm"
         >
           <ShieldCheck className="w-3.5 h-3.5" />
           Auto-fill Admin (admin@doctortracker.com)
@@ -106,7 +106,7 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@doctortracker.com"
               required
-              className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-colors"
+              className="w-full pl-9 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
             />
           </div>
         </div>
@@ -129,7 +129,7 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
               required
-              className="w-full pl-9 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-colors"
+              className="w-full pl-9 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors"
             />
             <button
               type="button"
@@ -167,11 +167,11 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-teal-950 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950 p-4 sm:p-6 lg:p-8">
       <div className="w-full max-w-md">
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 mb-4 shadow-lg shadow-teal-500/10 backdrop-blur-sm">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 mb-4 shadow-lg shadow-blue-500/10 backdrop-blur-sm">
             <Activity className="w-7 h-7 animate-pulse" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
@@ -185,7 +185,7 @@ export default function LoginPage() {
         <Suspense
           fallback={
             <div className="bg-white/95 rounded-2xl p-8 flex justify-center items-center">
-              <Loader2 className="w-6 h-6 animate-spin text-teal-600" />
+              <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
             </div>
           }
         >

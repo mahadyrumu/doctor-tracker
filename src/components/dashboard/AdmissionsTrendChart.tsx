@@ -28,7 +28,7 @@ function CustomAreaTooltip({ active, payload, label }: any) {
     return (
       <div className="bg-slate-900 text-white p-2.5 rounded-lg shadow-xl border border-slate-800 text-xs">
         <span className="font-semibold block text-slate-300">{label}</span>
-        <span className="text-teal-400 font-bold text-sm">
+        <span className="text-blue-400 font-bold text-sm">
           {payload[0].value} New Patient Admissions
         </span>
       </div>
@@ -97,7 +97,7 @@ export function AdmissionsTrendChart({
               Patient admission frequency and registration velocity over time
             </CardDescription>
           </div>
-          <span className="text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200/80 px-2.5 py-0.5 rounded-full">
+          <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded-full">
             Timeline Statistics
           </span>
         </div>
@@ -116,8 +116,8 @@ export function AdmissionsTrendChart({
               >
                 <defs>
                   <linearGradient id="admissionGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0d9488" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#0d9488" stopOpacity={0.0} />
+                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
@@ -138,7 +138,7 @@ export function AdmissionsTrendChart({
                 <Area
                   type="monotone"
                   dataKey="admissions"
-                  stroke="#0d9488"
+                  stroke="#2563eb"
                   strokeWidth={2.5}
                   fillOpacity={1}
                   fill="url(#admissionGradient)"

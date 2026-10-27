@@ -56,14 +56,14 @@ export function Sidebar({ onNavClick }: SidebarProps) {
     <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-full text-slate-300 select-none">
       {/* Brand Header */}
       <div className="h-16 px-6 flex items-center gap-3 border-b border-slate-800/80">
-        <div className="w-9 h-9 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center shadow-sm">
+        <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shadow-sm">
           <Activity className="w-5 h-5" />
         </div>
         <div>
           <span className="font-bold text-white text-base tracking-tight block leading-tight">
             Doctor Tracker
           </span>
-          <span className="text-[10px] text-teal-400 font-semibold tracking-wider uppercase">
+          <span className="text-[10px] text-blue-400 font-semibold tracking-wider uppercase">
             Admin Portal
           </span>
         </div>
@@ -87,14 +87,14 @@ export function Sidebar({ onNavClick }: SidebarProps) {
               onClick={onNavClick}
               className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 isActive
-                  ? "bg-teal-500/15 text-teal-300 font-semibold border border-teal-500/30 shadow-sm"
+                  ? "bg-blue-600/15 text-blue-300 font-semibold border border-blue-500/30 shadow-sm"
                   : "text-slate-400 hover:text-slate-100 hover:bg-slate-800/60"
               }`}
             >
               <div className="flex items-center gap-3">
                 <Icon
                   className={`w-4 h-4 ${
-                    isActive ? "text-teal-400" : "text-slate-400"
+                    isActive ? "text-blue-400" : "text-slate-400"
                   }`}
                 />
                 <span>{item.name}</span>
@@ -102,7 +102,7 @@ export function Sidebar({ onNavClick }: SidebarProps) {
               <span
                 className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
                   isActive
-                    ? "bg-teal-500/20 text-teal-300"
+                    ? "bg-blue-500/20 text-blue-300"
                     : "bg-slate-800 text-slate-400"
                 }`}
               >
@@ -116,7 +116,7 @@ export function Sidebar({ onNavClick }: SidebarProps) {
       {/* User Section & Logout */}
       <div className="p-4 border-t border-slate-800 bg-slate-900/50">
         <div className="flex items-center gap-3 mb-3 px-1">
-          <div className="w-8 h-8 rounded-lg bg-teal-500/20 border border-teal-500/30 text-teal-400 flex items-center justify-center font-bold text-xs">
+          <div className="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/30 text-blue-400 flex items-center justify-center font-bold text-xs">
             AD
           </div>
           <div className="flex-1 min-w-0">
@@ -124,7 +124,7 @@ export function Sidebar({ onNavClick }: SidebarProps) {
               <span className="text-xs font-semibold text-white truncate block">
                 Administrator
               </span>
-              <ShieldCheck className="w-3 h-3 text-teal-400 flex-shrink-0" />
+              <ShieldCheck className="w-3 h-3 text-blue-400 flex-shrink-0" />
             </div>
             <span className="text-[11px] text-slate-400 truncate block">
               admin@doctortracker.com

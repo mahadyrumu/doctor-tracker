@@ -9,12 +9,12 @@ function cn(...inputs: any[]) {
 }
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/30 disabled:pointer-events-none disabled:opacity-50 select-none",
+  "inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30 disabled:pointer-events-none disabled:opacity-50 select-none",
   {
     variants: {
       variant: {
         default:
-          "bg-teal-600 text-white shadow-sm hover:bg-teal-700 active:scale-[0.99]",
+          "bg-blue-600 text-white shadow-sm hover:bg-blue-700 active:scale-[0.99]",
         secondary:
           "bg-slate-100 text-slate-900 hover:bg-slate-200 active:scale-[0.99]",
         outline:
@@ -24,7 +24,7 @@ const buttonVariants = cva(
         ghost:
           "text-slate-600 hover:bg-slate-100 hover:text-slate-900",
         link:
-          "text-teal-600 underline-offset-4 hover:underline",
+          "text-blue-600 underline-offset-4 hover:underline",
       },
       size: {
         default: "h-9 px-4 py-2",

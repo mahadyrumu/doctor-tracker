@@ -102,11 +102,11 @@ function ProfileContent() {
 
       {/* User Hero Profile Card */}
       <Card className="p-6 sm:p-8 bg-white border border-slate-200/80 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-teal-50/70 to-transparent pointer-events-none rounded-bl-full" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-blue-50/70 to-transparent pointer-events-none rounded-bl-full" />
 
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-5">
-            <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-slate-900 via-slate-800 to-teal-700 text-teal-300 font-bold text-2xl sm:text-3xl flex items-center justify-center shadow-md ring-4 ring-teal-500/10 flex-shrink-0">
+            <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-slate-900 via-slate-800 to-blue-700 text-blue-300 font-bold text-2xl sm:text-3xl flex items-center justify-center shadow-md ring-4 ring-blue-500/10 flex-shrink-0">
               {user?.name
                 ? user.name
                     .split(" ")
@@ -121,7 +121,7 @@ function ProfileContent() {
                 <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
                   {user?.name || "Administrator"}
                 </h1>
-                <Badge variant="teal" className="gap-1 px-2.5 py-0.5 text-xs font-semibold uppercase">
+                <Badge variant="blue" className="gap-1 px-2.5 py-0.5 text-xs font-semibold uppercase">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   {user?.role || "admin"}
                 </Badge>
@@ -164,7 +164,7 @@ function ProfileContent() {
         <Card className="p-6 bg-white border border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3.5">
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Lock className="w-5 h-5 text-teal-600" />
+              <Lock className="w-5 h-5 text-blue-600" />
               Session & Security
             </h2>
             <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
@@ -198,7 +198,7 @@ function ProfileContent() {
               <span className="text-slate-500 flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" /> Route Protection
               </span>
-              <span className="font-semibold text-teal-700">Next.js Edge Middleware</span>
+              <span className="font-semibold text-blue-700">Next.js Edge Middleware</span>
             </div>
           </div>
         </Card>
@@ -217,7 +217,7 @@ function ProfileContent() {
 
           <div className="space-y-2.5 text-xs text-slate-600">
             <div className="flex items-start gap-2.5 p-2 rounded-lg bg-slate-50 border border-slate-100">
-              <Stethoscope className="w-4 h-4 text-teal-600 flex-shrink-0 mt-0.5" />
+              <Stethoscope className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-slate-900">Clinician Roster Management</p>
                 <p className="text-slate-500 text-[11px] mt-0.5">

@@ -165,7 +165,7 @@ function NewPatientForm() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-600 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shadow-sm">
               <UserPlus className="w-5 h-5" />
             </div>
             <div>
@@ -218,7 +218,7 @@ function NewPatientForm() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.name
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                   disabled={isSubmitting}
                 />
@@ -245,7 +245,7 @@ function NewPatientForm() {
                 className={`w-full px-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                   errors.age
                     ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                    : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                    : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                 }`}
                 disabled={isSubmitting}
               />
@@ -264,7 +264,7 @@ function NewPatientForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, gender: e.target.value })
                 }
-                className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-500 transition-all"
+                className="w-full px-4 py-2.5 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-all"
                 disabled={isSubmitting}
               >
                 <option value="Male">Male</option>
@@ -285,7 +285,7 @@ function NewPatientForm() {
                   onChange={(e) =>
                     setFormData({ ...formData, condition: e.target.value })
                   }
-                  className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-500 transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-all"
                   disabled={isSubmitting}
                 >
                   {MEDICAL_CONDITIONS.map((cond) => (
@@ -314,7 +314,7 @@ function NewPatientForm() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.phone
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                   disabled={isSubmitting}
                 />
@@ -340,7 +340,7 @@ function NewPatientForm() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.doctorId
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                 >
                   <option value="">-- Select Attending Doctor --</option>
@@ -376,7 +376,7 @@ function NewPatientForm() {
                   className={`w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-white focus:outline-none focus:ring-2 transition-all ${
                     errors.admissionDate
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-100"
-                      : "border-slate-300 focus:border-teal-500 focus:ring-teal-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
                   }`}
                   disabled={isSubmitting}
                 />

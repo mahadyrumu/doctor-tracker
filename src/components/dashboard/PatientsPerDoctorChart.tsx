@@ -31,9 +31,9 @@ function CustomBarTooltip({ active, payload }: any) {
     return (
       <div className="bg-slate-900 text-white p-3 rounded-lg shadow-xl border border-slate-800 text-xs">
         <p className="font-bold text-white text-sm">{item.doctorName}</p>
-        <p className="text-teal-400 font-medium mb-1.5">{item.specialization}</p>
+        <p className="text-blue-400 font-medium mb-1.5">{item.specialization}</p>
         <div className="flex items-center gap-1.5 text-slate-300">
-          <span className="w-2 h-2 rounded-full bg-teal-400 inline-block" />
+          <span className="w-2 h-2 rounded-full bg-blue-400 inline-block" />
           <span>Assigned Patients: </span>
           <span className="font-bold text-white text-xs">{item.patientCount}</span>
         </div>
@@ -80,7 +80,7 @@ export function PatientsPerDoctorChart({ data, isLoading }: PatientsPerDoctorCha
               Patient distribution across top attending medical practitioners
             </CardDescription>
           </div>
-          <span className="text-[11px] font-semibold text-teal-700 bg-teal-50 border border-teal-200/80 px-2.5 py-0.5 rounded-full">
+          <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200/80 px-2.5 py-0.5 rounded-full">
             Top {chartData.length} Doctors
           </span>
         </div>
@@ -116,7 +116,7 @@ export function PatientsPerDoctorChart({ data, isLoading }: PatientsPerDoctorCha
                 <Tooltip content={<CustomBarTooltip />} cursor={{ fill: "#f1f5f9" }} />
                 <Bar
                   dataKey="patientCount"
-                  fill="#0d9488"
+                  fill="#2563eb"
                   radius={[6, 6, 0, 0]}
                   maxBarSize={45}
                 />

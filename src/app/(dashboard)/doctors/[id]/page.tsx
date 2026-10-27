@@ -218,12 +218,12 @@ function DoctorProfileContent() {
 
       {/* Doctor Hero Profile Card */}
       <Card className="p-6 sm:p-8 bg-white border border-slate-200/80 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-teal-50/60 to-transparent pointer-events-none rounded-bl-full" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-blue-50/60 to-transparent pointer-events-none rounded-bl-full" />
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           {/* Avatar and Credentials */}
           <div className="flex items-start sm:items-center gap-5">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-teal-600 to-indigo-600 text-white font-bold text-2xl sm:text-3xl flex items-center justify-center shadow-md flex-shrink-0">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-2xl sm:text-3xl flex items-center justify-center shadow-md flex-shrink-0">
               {doctor.name
                 .replace(/^(Dr\.|Doctor)\s*/i, "")
                 .split(" ")
@@ -237,7 +237,7 @@ function DoctorProfileContent() {
                 <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
                   {doctor.name}
                 </h1>
-                <Badge variant="teal" className="gap-1 px-2.5 py-0.5 text-xs font-semibold">
+                <Badge variant="blue" className="gap-1 px-2.5 py-0.5 text-xs font-semibold">
                   <Stethoscope className="w-3.5 h-3.5" />
                   {doctor.specialization}
                 </Badge>
@@ -292,7 +292,7 @@ function DoctorProfileContent() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Assigned */}
         <Card className="p-5 bg-white border border-slate-200 shadow-sm flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
             <Users className="w-6 h-6" />
           </div>
           <div>
@@ -363,7 +363,7 @@ function DoctorProfileContent() {
         <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Users className="w-5 h-5 text-teal-600" />
+              <Users className="w-5 h-5 text-blue-600" />
               Assigned Patient Roster
               {pagination && (
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
@@ -388,7 +388,7 @@ function DoctorProfileContent() {
                   setSearchTerm(e.target.value);
                   setPage(1);
                 }}
-                className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-100 focus:border-teal-500 transition-all"
+                className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500 transition-all"
               />
             </div>
 
@@ -446,7 +446,7 @@ function DoctorProfileContent() {
                     <td className="py-4 px-6 font-semibold text-slate-900">
                       <Link
                         href={`/patients/${p._id}`}
-                        className="hover:text-teal-600 transition-colors flex items-center gap-1.5"
+                        className="hover:text-blue-600 transition-colors flex items-center gap-1.5"
                       >
                         {p.name}
                         <ExternalLink className="w-3 h-3 text-slate-400" />
