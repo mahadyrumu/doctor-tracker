@@ -128,3 +128,4 @@ export function PatientsPerDoctorChart({ data, isLoading }: PatientsPerDoctorCha
     </Card>
   );
 }
+

@@ -144,3 +144,4 @@ describe("Dashboard Analytics API (/api/dashboard/stats)", () => {
     expect(data.admissionsTrend.length).toBeGreaterThanOrEqual(1);
   });
 });
+
