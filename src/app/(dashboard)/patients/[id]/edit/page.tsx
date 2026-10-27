@@ -69,8 +69,9 @@ function EditPatientContent() {
         throw new Error(patientData.message || "Failed to load patient record");
       }
 
-      if (doctorsData.success && doctorsData.data?.doctors) {
-        setDoctors(doctorsData.data.doctors);
+      const docsList = Array.isArray(doctorsData.data) ? doctorsData.data : doctorsData.data?.doctors || [];
+      if (doctorsData.success && docsList.length > 0) {
+        setDoctors(docsList);
       }
 
       const p = patientData.data;

@@ -110,8 +110,9 @@ function DoctorProfileContent() {
       if (!res.ok || !data.success) {
         throw new Error(data.message || "Failed to load assigned patients");
       }
-      setPatients(data.data.patients || []);
-      setPagination(data.data.pagination || null);
+      const patientsList = Array.isArray(data.data) ? data.data : data.data?.patients || [];
+      setPatients(patientsList);
+      setPagination(data.pagination || data.data?.pagination || null);
     } catch (err: any) {
       toast.error(err.message || "Could not fetch patients roster");
     } finally {

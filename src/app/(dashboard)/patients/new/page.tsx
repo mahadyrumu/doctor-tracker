@@ -57,13 +57,14 @@ function NewPatientForm() {
         setIsLoadingDoctors(true);
         const res = await fetch("/api/doctors?limit=50");
         const data = await res.json();
-        if (data.success && data.data?.doctors) {
-          setDoctors(data.data.doctors);
+        const doctorsList = Array.isArray(data.data) ? data.data : data.data?.doctors || [];
+        if (data.success && doctorsList.length > 0) {
+          setDoctors(doctorsList);
           // If no doctor selected yet and preselected is not available, default to first doctor
-          if (!preselectedDoctorId && data.data.doctors.length > 0) {
+          if (!preselectedDoctorId && doctorsList.length > 0) {
             setFormData((prev) => ({
               ...prev,
-              doctorId: prev.doctorId || data.data.doctors[0]._id,
+              doctorId: prev.doctorId || doctorsList[0]._id,
             }));
           }
         }

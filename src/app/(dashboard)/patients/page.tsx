@@ -87,9 +87,10 @@ function PatientsContent() {
         throw new Error(data.message || "Failed to load patients list");
       }
 
-      setPatients(data.data.patients || []);
+      const patientsList = Array.isArray(data.data) ? data.data : data.data?.patients || [];
+      setPatients(patientsList);
       setPagination(
-        data.data.pagination || {
+        data.pagination || data.data?.pagination || {
           page: 1,
           totalPages: 1,
           totalDocs: 0,
