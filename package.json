@@ -38,6 +38,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "happy-dom": "^21.0.4",
     "mongodb-memory-server": "^11.3.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",

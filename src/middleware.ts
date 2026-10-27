@@ -63,3 +63,4 @@ export const config = {
     "/patients/:path*",
   ],
 };
+
