@@ -124,7 +124,7 @@ flowchart TD
     Client["Client Browser / Mobile PWA\n(React 19 Server & Client Components)"]
     
     subgraph EdgeBoundary ["Security & Edge Boundary"]
-        MW["Next.js Edge Middleware (middleware.ts)\n- Stateless JWT Verification via 'jose'\n- HttpOnly Cookie Validation\n- Route Protection (/dashboard, /doctors, /patients)"]
+        MW["Next.js Edge Middleware (middleware.ts)\n- Stateless JWT Verification via 'jose'\n- HttpOnly Cookie Validation\n- Route Protection (/dashboard, /doctors, /patients, /profile)"]
     end
 
     subgraph APIControllers ["REST Route Handlers (/api/*)"]
@@ -164,7 +164,7 @@ flowchart TD
 ### Architectural Highlights
 
 1. **Edge Runtime Security:**
-   The Next.js Edge Middleware (`src/middleware.ts`) verifies stateless JSON Web Tokens using WebCrypto-compliant `jose`. Protected routes (`/dashboard`, `/doctors`, `/patients`) reject unauthorized traffic at the network periphery before running server code or instantiating database connections.
+   The Next.js Edge Middleware (`src/middleware.ts`) verifies stateless JSON Web Tokens using WebCrypto-compliant `jose`. Protected routes (`/dashboard`, `/doctors`, `/patients`, `/profile`) reject unauthorized traffic at the network periphery before running server code or instantiating database connections.
 
 2. **Domain Service Isolation:**
    Route handlers act exclusively as HTTP controllers: they parse incoming JSON, validate schemas with Zod, and delegate business logic directly to domain services (`DoctorService`, `PatientService`, `AnalyticsService`). Database queries never leak into UI components or route handlers.
@@ -287,7 +287,7 @@ We implemented a two-tier synchronization architecture:
 
 ## 5. Visual Evidence
 
-The user interface was crafted following modern clinical design principles: high-contrast typography, atomic component hierarchy, clean slate-and-teal palettes, responsive tables, and dedicated full-page workflows (zero popups or modal interruptions).
+The user interface was crafted following modern clinical design principles: high-contrast typography, atomic component hierarchy, clean slate-and-blue palettes (Clinical Blue), responsive tables, and dedicated full-page workflows (zero popups or modal interruptions).
 
 ### 5.1 Desktop & Mobile Experience
 
