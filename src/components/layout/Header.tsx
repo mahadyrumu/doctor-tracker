@@ -111,15 +111,9 @@ export function Header({ onMenuToggle }: HeaderProps) {
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-2 sm:gap-4">
-        {/* Live Status Badge */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/60 text-emerald-700 text-xs font-medium">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping inline-block" />
-          <span>MongoDB Live</span>
-        </div>
-
+      <div className="flex items-center">
         {/* Profile Menu Dropdown Trigger */}
-        <div className="relative pl-2 sm:border-l sm:border-slate-200" ref={dropdownRef}>
+        <div className="relative" ref={dropdownRef}>
           <button
             type="button"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
