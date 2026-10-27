@@ -253,3 +253,4 @@ export function DoctorModal({ isOpen, onClose, onSuccess }: DoctorModalProps) {
     </div>
   );
 }
+
