@@ -43,15 +43,31 @@ export async function verifySessionToken(
 }
 
 /**
- * Extracts and verifies the session from incoming Next.js Request.
+ * Extracts and verifies the session from incoming Next.js Request or server cookies.
  */
 export async function getSession(
-  req?: NextRequest
+  req?: Request | NextRequest
 ): Promise<SessionPayload | null> {
   let token: string | undefined;
 
   if (req) {
-    token = req.cookies.get(AUTH_COOKIE_NAME)?.value;
+    if ("cookies" in req && typeof (req as any).cookies?.get === "function") {
+      token = (req as NextRequest).cookies.get(AUTH_COOKIE_NAME)?.value;
+    }
+
+    if (!token) {
+      const cookieHeader = req.headers.get("cookie");
+      if (cookieHeader) {
+        const cookiesMap = Object.fromEntries(
+          cookieHeader.split("; ").map((c) => {
+            const [k, ...v] = c.split("=");
+            return [k, v.join("=")];
+          })
+        );
+        token = cookiesMap[AUTH_COOKIE_NAME];
+      }
+    }
+
     if (!token) {
       const authHeader = req.headers.get("authorization");
       if (authHeader?.startsWith("Bearer ")) {
@@ -59,8 +75,12 @@ export async function getSession(
       }
     }
   } else {
-    const cookieStore = await cookies();
-    token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
+    try {
+      const cookieStore = await cookies();
+      token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
+    } catch {
+      token = undefined;
+    }
   }
 
   if (!token) return null;
