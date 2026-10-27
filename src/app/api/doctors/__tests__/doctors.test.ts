@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { Doctor, Patient } from "@/lib/models";
 import { GET as getDoctorsHandler, POST as createDoctorHandler } from "../route";
+import { GET as getDoctorByIdHandler } from "../[id]/route";
 import {
   GET as getDoctorPatientsHandler,
   POST as addDoctorPatientHandler,
@@ -153,6 +154,55 @@ describe("Doctor Management API", () => {
     const jsonFiltered = await resFiltered.json();
     expect(jsonFiltered.data.length).toBe(1);
     expect(jsonFiltered.data[0].name).toBe("Dr. James Wilson");
+  });
+
+  it("GET /api/doctors/:id should return doctor profile and caseload metrics", async () => {
+    const doc = await Doctor.create({
+      name: "Dr. Miranda Bailey",
+      specialization: "General Surgery",
+      hospital: "Grey Sloan Memorial",
+      phone: "+1-555-0300",
+      email: "bailey@greysloan.org",
+    });
+
+    await Patient.create([
+      {
+        name: "Patient Alpha",
+        age: 30,
+        gender: "Male",
+        condition: "Critical",
+        phone: "+1-555-0010",
+        doctorId: doc._id,
+        admissionDate: new Date(),
+      },
+      {
+        name: "Patient Beta",
+        age: 50,
+        gender: "Female",
+        condition: "Stable",
+        phone: "+1-555-0020",
+        doctorId: doc._id,
+        admissionDate: new Date(),
+      },
+    ]);
+
+    const req = new Request(`http://localhost:3000/api/doctors/${doc._id}`, {
+      method: "GET",
+      headers: { cookie: authCookieHeader },
+    });
+
+    const res = await getDoctorByIdHandler(req as any, {
+      params: Promise.resolve({ id: doc._id.toString() }),
+    } as any);
+
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.success).toBe(true);
+    expect(json.data.name).toBe("Dr. Miranda Bailey");
+    expect(json.data.patientCount).toBe(2);
+    expect(json.data.criticalCount).toBe(1);
+    expect(json.data.stableCount).toBe(1);
+    expect(json.data.averageAge).toBe(40);
   });
 
   it("should manage corresponding patients under a specific doctor", async () => {

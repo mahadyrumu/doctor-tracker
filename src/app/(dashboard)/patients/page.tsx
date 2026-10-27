@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
   UserPlus,
   Edit2,
@@ -10,18 +11,18 @@ import {
   ChevronRight,
   AlertCircle,
   Loader2,
-  Phone,
+  User,
   Clock,
+  Phone,
+  Stethoscope,
   HeartPulse,
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { PatientFilterBar } from "@/components/patients/PatientFilterBar";
-import { EditPatientModal } from "@/components/patients/EditPatientModal";
-import { DeletePatientDialog } from "@/components/patients/DeletePatientDialog";
-import { AddPatientModal } from "@/components/patients/AddPatientModal";
 import type { PatientWithDoctor } from "@/lib/services/patient.service";
 
 function PatientsContent() {
@@ -46,12 +47,9 @@ function PatientsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Modals state
-  const [isAddPatientOpen, setIsAddPatientOpen] = useState(false);
-  const [editingPatient, setEditingPatient] =
-    useState<PatientWithDoctor | null>(null);
-  const [deletingPatient, setDeletingPatient] =
-    useState<PatientWithDoctor | null>(null);
+  // Inline delete confirmation state (Zero Popups)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const updateUrlParams = useCallback(
     (params: Record<string, string | number>) => {
@@ -63,36 +61,46 @@ function PatientsContent() {
           current.delete(key);
         }
       });
-      router.push(`/patients?${current.toString()}`);
+      router.replace(`/patients?${current.toString()}`);
     },
     [router, searchParams]
   );
 
   const fetchPatients = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
     try {
-      const url = new URL("/api/patients", window.location.origin);
-      url.searchParams.set("page", String(pageParam));
-      url.searchParams.set("limit", "10");
-      if (searchParam) url.searchParams.set("search", searchParam);
-      if (conditionParam) url.searchParams.set("condition", conditionParam);
-      if (startParam) url.searchParams.set("startDate", startParam);
-      if (endParam) url.searchParams.set("endDate", endParam);
+      setLoading(true);
+      setError(null);
 
-      const res = await fetch(url.toString());
-      const json = await res.json();
+      const query = new URLSearchParams({
+        page: String(pageParam),
+        limit: "10",
+        search: searchParam,
+        condition: conditionParam,
+        startDate: startParam,
+        endDate: endParam,
+      });
 
-      if (!res.ok || !json.success) {
-        throw new Error(json.message || "Failed to load patients list");
+      const res = await fetch(`/api/patients?${query.toString()}`);
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to load patients list");
       }
 
-      setPatients(json.data);
-      setPagination(json.pagination);
+      setPatients(data.data.patients || []);
+      setPagination(
+        data.data.pagination || {
+          page: 1,
+          totalPages: 1,
+          totalDocs: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        }
+      );
     } catch (err: any) {
-      setError(err.message || "Failed to load patients");
-      toast.error(err.message || "Error retrieving patients");
+      console.error(err);
+      setError(err.message || "Failed to fetch patients");
+      toast.error(err.message || "Failed to fetch patients");
     } finally {
       setLoading(false);
     }
@@ -102,29 +110,64 @@ function PatientsContent() {
     fetchPatients();
   }, [fetchPatients]);
 
+  const handleDelete = async (patientId: string) => {
+    try {
+      setIsDeleting(true);
+      const res = await fetch(`/api/patients/${patientId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to delete patient");
+      }
+      toast.success("Patient record permanently deleted");
+      setConfirmDeleteId(null);
+      fetchPatients();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete patient");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const getConditionBadgeVariant = (condition: string) => {
+    switch (condition?.toLowerCase()) {
+      case "critical":
+        return "destructive";
+      case "serious":
+        return "amber";
+      case "stable":
+        return "green";
+      case "discharged":
+      default:
+        return "default";
+    }
+  };
+
   return (
-    <div className="space-y-6 pb-12">
-      {/* Top Header & Add Patient Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 sm:p-5 rounded-xl border border-slate-200/80 shadow-xs">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-            Patients Clinical Directory
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Dedicated patient management with condition filtering, timeline search, and practitioner assignment.
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+            <HeartPulse className="w-6 h-6 text-teal-600" />
+            <span>Dedicated Patient Directory</span>
+          </h1>
+          <p className="text-sm text-slate-500 mt-0.5">
+            Monitor clinical admissions, medical condition statuses, and assigned clinicians
           </p>
         </div>
 
-        <Button
-          onClick={() => setIsAddPatientOpen(true)}
-          className="text-xs self-start sm:self-auto"
-        >
-          <UserPlus className="w-4 h-4 mr-1.5" />
-          <span>Register New Patient</span>
-        </Button>
+        {/* Action: Dedicated Register Patient Page */}
+        <Link href="/patients/new">
+          <Button variant="default" className="shadow-sm gap-2">
+            <UserPlus className="w-4 h-4" />
+            <span>Add Patient</span>
+          </Button>
+        </Link>
       </div>
 
-      {/* Multi-criteria Filter Bar */}
+      {/* Filter Bar with Search, Condition & Date Range */}
       <PatientFilterBar
         search={searchParam}
         condition={conditionParam}
@@ -137,96 +180,132 @@ function PatientsContent() {
         onStartDateChange={(startDate) =>
           updateUrlParams({ startDate, page: 1 })
         }
-        onEndDateChange={(endDate) => updateUrlParams({ endDate, page: 1 })}
-        onReset={() => router.push("/patients")}
+        onEndDateChange={(endDate) =>
+          updateUrlParams({ endDate, page: 1 })
+        }
+        onReset={() => router.replace("/patients")}
       />
 
-      {/* Error Banner */}
-      {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>{error}</span>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchPatients}
-            className="text-xs h-7"
-          >
-            Retry
-          </Button>
-        </div>
-      )}
-
-      {/* Patients Table */}
-      <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
+      {/* Main Content Area */}
+      <div className="bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Skeleton key={i} className="h-14 w-full" />
-            ))}
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center space-y-3">
+            <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
+            <h3 className="text-base font-semibold text-slate-900">
+              Failed to load patient records
+            </h3>
+            <p className="text-sm text-slate-500 max-w-md mx-auto">{error}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchPatients}
+              className="mt-2"
+            >
+              Try Again
+            </Button>
           </div>
         ) : patients.length === 0 ? (
-          <div className="py-16 text-center">
-            <HeartPulse className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-sm font-semibold text-slate-700">
+          <div className="p-12 text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 mx-auto">
+              <HeartPulse className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-semibold text-slate-900">
               No patients found
+            </h3>
+            <p className="text-sm text-slate-500 max-w-md mx-auto">
+              {searchParam || conditionParam || startParam || endParam
+                ? "No patient records match the applied criteria. Try modifying your filter parameters."
+                : "No patients have been admitted to the directory yet."}
             </p>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-              No patient records match the specified filters. Try adjusting your
-              search criteria or register a new patient.
-            </p>
+            <Link href="/patients/new">
+              <Button variant="outline" size="sm" className="mt-2 gap-1.5">
+                <UserPlus className="w-4 h-4" />
+                Register New Patient
+              </Button>
+            </Link>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/60 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  <th className="py-3 px-4">Patient Name</th>
-                  <th className="py-3 px-4">Diagnosis Condition</th>
-                  <th className="py-3 px-4">Attending Doctor</th>
-                  <th className="py-3 px-4">Contact Phone</th>
-                  <th className="py-3 px-4">Admission Date</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                <tr className="border-b border-slate-200/80 bg-slate-50/75 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  <th className="py-3.5 px-4">Patient Name</th>
+                  <th className="py-3.5 px-4">Age &amp; Gender</th>
+                  <th className="py-3.5 px-4">Condition</th>
+                  <th className="py-3.5 px-4">Attending Doctor</th>
+                  <th className="py-3.5 px-4">Contact Phone</th>
+                  <th className="py-3.5 px-4">Admission Date</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
+              <tbody className="divide-y divide-slate-100">
                 {patients.map((patient) => (
                   <tr
                     key={patient._id}
                     className="hover:bg-slate-50/70 transition-colors group"
                   >
                     <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                      <Link
+                        href={`/patients/${patient._id}`}
+                        className="flex items-center gap-2.5 group/link"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
                           {patient.name.charAt(0)}
                         </div>
                         <div>
-                          <span className="font-bold text-slate-900 block group-hover:text-teal-600 transition-colors">
+                          <span className="font-bold text-slate-900 block group-hover/link:text-indigo-600 transition-colors">
                             {patient.name}
                           </span>
                           <span className="text-[11px] text-slate-400">
-                            {patient.gender}, {patient.age} yrs old
+                            ID: {patient._id.slice(-6)}
                           </span>
                         </div>
-                      </div>
+                      </Link>
                     </td>
 
-                    <td className="py-3.5 px-4">
-                      <Badge variant="teal">{patient.condition}</Badge>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <span className="font-semibold text-slate-800 block">
-                        {patient.doctorName}
-                      </span>
-                      <span className="text-[11px] text-teal-600 font-medium">
-                        {patient.doctorSpecialization}
+                    <td className="py-3.5 px-4 text-slate-600">
+                      <span className="inline-flex items-center gap-1 font-medium text-xs">
+                        <User className="w-3.5 h-3.5 text-slate-400" />
+                        <span>
+                          {patient.age} yrs • {patient.gender}
+                        </span>
                       </span>
                     </td>
 
-                    <td className="py-3.5 px-4 text-slate-600 font-medium">
+                    <td className="py-3.5 px-4">
+                      <Badge
+                        variant={getConditionBadgeVariant(patient.condition) as any}
+                      >
+                        {patient.condition}
+                      </Badge>
+                    </td>
+
+                    <td className="py-3.5 px-4">
+                      <Link
+                        href={`/doctors/${patient.doctorId}`}
+                        className="group/doc block"
+                      >
+                        <div className="flex items-center gap-1.5 text-slate-800 font-medium text-xs group-hover/doc:text-teal-600 transition-colors">
+                          <Stethoscope className="w-3.5 h-3.5 text-teal-600 flex-shrink-0" />
+                          <span>{patient.doctorName}</span>
+                          <ExternalLink className="w-3 h-3 text-slate-400 opacity-0 group-hover/doc:opacity-100 transition-opacity" />
+                        </div>
+                        <span className="text-[11px] text-slate-400 block pl-5">
+                          {patient.doctorSpecialization}
+                        </span>
+                      </Link>
+                    </td>
+
+                    <td className="py-3.5 px-4 text-slate-600">
                       <span className="inline-flex items-center gap-1.5 text-xs">
                         <Phone className="w-3.5 h-3.5 text-slate-400" />
                         <span>{patient.phone}</span>
@@ -240,26 +319,63 @@ function PatientsContent() {
                       </span>
                     </td>
 
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => setEditingPatient(patient)}
-                          className="p-1.5 rounded-lg text-slate-500 hover:text-teal-700 hover:bg-teal-50 transition-colors"
-                          title="Edit Patient Information"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
+                    {/* Actions: Dedicated Profile, Edit, and Inline Delete (Zero Popups) */}
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                      {confirmDeleteId === patient._id ? (
+                        <div className="inline-flex items-center gap-1.5 bg-rose-50 border border-rose-200 rounded-lg p-1">
+                          <span className="text-xs text-rose-700 font-semibold px-1">
+                            Delete?
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(patient._id)}
+                            disabled={isDeleting}
+                            className="px-2 py-0.5 text-xs font-semibold bg-rose-600 text-white rounded hover:bg-rose-700 transition-colors"
+                          >
+                            {isDeleting ? "..." : "Yes"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setConfirmDeleteId(null)}
+                            disabled={isDeleting}
+                            className="px-2 py-0.5 text-xs text-slate-600 hover:text-slate-900 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-end gap-1.5">
+                          <Link href={`/patients/${patient._id}`}>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-xs h-8 px-2 text-indigo-700 border-indigo-200 hover:bg-indigo-50"
+                              title="View Professional Profile"
+                            >
+                              Profile
+                            </Button>
+                          </Link>
 
-                        <button
-                          type="button"
-                          onClick={() => setDeletingPatient(patient)}
-                          className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                          title="Delete Patient Record"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                          <Link href={`/patients/${patient._id}/edit`}>
+                            <button
+                              type="button"
+                              className="p-1.5 rounded-lg text-slate-500 hover:text-teal-700 hover:bg-teal-50 transition-colors"
+                              title="Edit Patient Information"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                          </Link>
+
+                          <button
+                            type="button"
+                            onClick={() => setConfirmDeleteId(patient._id)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                            title="Delete Patient Record"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -314,29 +430,6 @@ function PatientsContent() {
           </div>
         )}
       </div>
-
-      {/* Modal: Add Patient */}
-      <AddPatientModal
-        isOpen={isAddPatientOpen}
-        onClose={() => setIsAddPatientOpen(false)}
-        onSuccess={fetchPatients}
-      />
-
-      {/* Modal: Edit Patient */}
-      <EditPatientModal
-        patient={editingPatient}
-        isOpen={Boolean(editingPatient)}
-        onClose={() => setEditingPatient(null)}
-        onSuccess={fetchPatients}
-      />
-
-      {/* Dialog: Delete Patient */}
-      <DeletePatientDialog
-        patient={deletingPatient}
-        isOpen={Boolean(deletingPatient)}
-        onClose={() => setDeletingPatient(null)}
-        onSuccess={fetchPatients}
-      />
     </div>
   );
 }
@@ -354,4 +447,3 @@ export default function PatientsPage() {
     </Suspense>
   );
 }
-

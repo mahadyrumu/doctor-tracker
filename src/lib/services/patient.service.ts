@@ -172,12 +172,22 @@ export class PatientService {
     const patient = await Patient.findById(id).populate("doctorId").lean();
     if (!patient) return null;
 
+    const doc = patient.doctorId as any;
     return {
       ...patient,
       _id: patient._id.toString(),
-      doctorId: (patient.doctorId as any)?._id?.toString() || "",
-      doctorName: (patient.doctorId as any)?.name || "Unassigned",
-      doctorSpecialization: (patient.doctorId as any)?.specialization || "",
+      admissionDate: patient.admissionDate
+        ? new Date(patient.admissionDate).toISOString().split("T")[0]
+        : "",
+      createdAt: patient.createdAt
+        ? new Date(patient.createdAt).toISOString()
+        : "",
+      doctorId: doc?._id?.toString() || "",
+      doctorName: doc?.name || "Unassigned",
+      doctorSpecialization: doc?.specialization || "",
+      doctorHospital: doc?.hospital || "General Hospital",
+      doctorPhone: doc?.phone || "N/A",
+      doctorEmail: doc?.email || "N/A",
     };
   }
 

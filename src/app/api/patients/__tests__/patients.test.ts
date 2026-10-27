@@ -4,8 +4,10 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import { Doctor, Patient } from "@/lib/models";
 import {
   GET as getPatientsHandler,
+  POST as createPatientHandler,
 } from "../route";
 import {
+  GET as getPatientHandler,
   PUT as updatePatientHandler,
   DELETE as deletePatientHandler,
 } from "../[id]/route";
@@ -218,6 +220,77 @@ describe("Dedicated Patient Management API (/api/patients)", () => {
 
     const inDb = await Patient.findById(patientId);
     expect(inDb).toBeNull();
+  });
+
+  it("POST /api/patients should create a new patient assigned to a doctor", async () => {
+    const doctor = await Doctor.create({
+      name: "Dr. Robert Chase",
+      specialization: "Intensive Care",
+      hospital: "Princeton Plainsboro",
+      phone: "+1-555-0153",
+      email: "chase@ppth.org",
+    });
+
+    const createReq = new Request("http://localhost:3000/api/patients", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        cookie: authCookieHeader,
+      },
+      body: JSON.stringify({
+        name: "New Admitted Patient",
+        age: 35,
+        gender: "Male",
+        condition: "Stable",
+        phone: "+1-555-4433",
+        doctorId: doctor._id.toString(),
+        admissionDate: "2026-03-01",
+      }),
+    });
+
+    const res = await createPatientHandler(createReq as any);
+    expect(res.status).toBe(201);
+    const json = await res.json();
+    expect(json.success).toBe(true);
+    expect(json.data.name).toBe("New Admitted Patient");
+    expect(json.data.condition).toBe("Stable");
+  });
+
+  it("GET /api/patients/:id should return patient profile with populated doctor details", async () => {
+    const doctor = await Doctor.create({
+      name: "Dr. Eric Foreman",
+      specialization: "Neurology",
+      hospital: "Princeton Plainsboro",
+      phone: "+1-555-0154",
+      email: "foreman@ppth.org",
+    });
+
+    const patient = await Patient.create({
+      name: "Profile Test Patient",
+      age: 52,
+      gender: "Female",
+      condition: "Serious",
+      phone: "+1-555-7766",
+      admissionDate: new Date("2026-03-05"),
+      doctorId: doctor._id,
+    });
+
+    const req = new Request(`http://localhost:3000/api/patients/${patient._id}`, {
+      method: "GET",
+      headers: { cookie: authCookieHeader },
+    });
+
+    const res = await getPatientHandler(req as any, {
+      params: Promise.resolve({ id: patient._id.toString() }),
+    } as any);
+
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.success).toBe(true);
+    expect(json.data.name).toBe("Profile Test Patient");
+    expect(json.data.doctorName).toBe("Dr. Eric Foreman");
+    expect(json.data.doctorSpecialization).toBe("Neurology");
+    expect(json.data.doctorHospital).toBe("Princeton Plainsboro");
   });
 });
 

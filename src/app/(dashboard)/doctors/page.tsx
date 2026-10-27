@@ -2,25 +2,26 @@
 
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
-  UserPlus,
   Users,
+  UserPlus,
   Building2,
-  Mail,
   Phone,
+  Mail,
+  Calendar,
   ChevronLeft,
   ChevronRight,
-  Calendar,
   AlertCircle,
   Loader2,
   Stethoscope,
+  ExternalLink,
+  User,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { DoctorModal } from "@/components/doctors/DoctorModal";
-import { DoctorPatientsModal } from "@/components/doctors/DoctorPatientsModal";
 import { DoctorFilterBar } from "@/components/doctors/DoctorFilterBar";
 import type { DoctorWithStats } from "@/lib/services/doctor.service";
 
@@ -46,11 +47,6 @@ function DoctorsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Modals state
-  const [isAddDoctorOpen, setIsAddDoctorOpen] = useState(false);
-  const [selectedDoctorForPatients, setSelectedDoctorForPatients] =
-    useState<DoctorWithStats | null>(null);
-
   // Helper to sync state to URL
   const updateUrlParams = useCallback(
     (params: Record<string, string | number>) => {
@@ -62,36 +58,47 @@ function DoctorsContent() {
           current.delete(key);
         }
       });
-      router.push(`/doctors?${current.toString()}`);
+      router.replace(`/doctors?${current.toString()}`);
     },
     [router, searchParams]
   );
 
+  // Fetch doctors based on active URL parameters
   const fetchDoctors = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
     try {
-      const url = new URL("/api/doctors", window.location.origin);
-      url.searchParams.set("page", String(pageParam));
-      url.searchParams.set("limit", "10");
-      if (searchParam) url.searchParams.set("search", searchParam);
-      if (specParam) url.searchParams.set("specialization", specParam);
-      if (startParam) url.searchParams.set("startDate", startParam);
-      if (endParam) url.searchParams.set("endDate", endParam);
+      setLoading(true);
+      setError(null);
 
-      const res = await fetch(url.toString());
-      const json = await res.json();
+      const query = new URLSearchParams({
+        page: String(pageParam),
+        limit: "10",
+        search: searchParam,
+        specialization: specParam,
+        startDate: startParam,
+        endDate: endParam,
+      });
 
-      if (!res.ok || !json.success) {
-        throw new Error(json.message || "Failed to load doctors");
+      const res = await fetch(`/api/doctors?${query.toString()}`);
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to load doctors list");
       }
 
-      setDoctors(json.data);
-      setPagination(json.pagination);
+      setDoctors(data.data.doctors || []);
+      setPagination(
+        data.data.pagination || {
+          page: 1,
+          totalPages: 1,
+          totalDocs: 0,
+          hasNextPage: false,
+          hasPrevPage: false,
+        }
+      );
     } catch (err: any) {
-      setError(err.message || "Failed to retrieve doctors list");
-      toast.error(err.message || "Error loading doctors");
+      console.error(err);
+      setError(err.message || "Failed to fetch doctors");
+      toast.error(err.message || "Failed to fetch doctors");
     } finally {
       setLoading(false);
     }
@@ -102,28 +109,29 @@ function DoctorsContent() {
   }, [fetchDoctors]);
 
   return (
-    <div className="space-y-6 pb-12">
-      {/* Top Header & Add Doctor Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 sm:p-5 rounded-xl border border-slate-200/80 shadow-xs">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-            Medical Practitioners Directory
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Manage registered practitioners, medical credentials, and corresponding patient rosters.
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+            <Stethoscope className="w-6 h-6 text-teal-600" />
+            <span>Doctor Management</span>
+          </h1>
+          <p className="text-sm text-slate-500 mt-0.5">
+            Manage clinical staff, track patient caseloads, and view professional profiles
           </p>
         </div>
 
-        <Button
-          onClick={() => setIsAddDoctorOpen(true)}
-          className="text-xs self-start sm:self-auto"
-        >
-          <UserPlus className="w-4 h-4 mr-1.5" />
-          <span>Add New Doctor</span>
-        </Button>
+        {/* Action: Dedicated Create Doctor Page */}
+        <Link href="/doctors/new">
+          <Button variant="default" className="shadow-sm gap-2">
+            <UserPlus className="w-4 h-4" />
+            <span>Add Doctor</span>
+          </Button>
+        </Link>
       </div>
 
-      {/* Filter Bar */}
+      {/* Filter & Search Bar */}
       <DoctorFilterBar
         search={searchParam}
         specialization={specParam}
@@ -136,83 +144,96 @@ function DoctorsContent() {
         onStartDateChange={(startDate) =>
           updateUrlParams({ startDate, page: 1 })
         }
-        onEndDateChange={(endDate) => updateUrlParams({ endDate, page: 1 })}
-        onReset={() =>
-          router.push("/doctors")
+        onEndDateChange={(endDate) =>
+          updateUrlParams({ endDate, page: 1 })
         }
+        onReset={() => router.replace("/doctors")}
       />
 
-      {/* Error Banner */}
-      {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-xs flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>{error}</span>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchDoctors}
-            className="text-xs h-7"
-          >
-            Retry
-          </Button>
-        </div>
-      )}
-
-      {/* Doctors Table */}
-      <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
+      {/* Main Content Area */}
+      <div className="bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Skeleton key={i} className="h-14 w-full" />
-            ))}
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        ) : error ? (
+          <div className="p-8 text-center space-y-3">
+            <AlertCircle className="w-10 h-10 text-rose-500 mx-auto" />
+            <h3 className="text-base font-semibold text-slate-900">
+              Failed to load doctors
+            </h3>
+            <p className="text-sm text-slate-500 max-w-md mx-auto">{error}</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={fetchDoctors}
+              className="mt-2"
+            >
+              Try Again
+            </Button>
           </div>
         ) : doctors.length === 0 ? (
-          <div className="py-16 text-center">
-            <Stethoscope className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-sm font-semibold text-slate-700">
+          <div className="p-12 text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 mx-auto">
+              <Stethoscope className="w-6 h-6" />
+            </div>
+            <h3 className="text-base font-semibold text-slate-900">
               No doctors found
+            </h3>
+            <p className="text-sm text-slate-500 max-w-md mx-auto">
+              {searchParam || specParam || startParam || endParam
+                ? "No doctors matched your filtering criteria. Try clearing search filters."
+                : "No doctors have been registered in the system yet."}
             </p>
-            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-              No medical practitioners match your filter criteria. Try adjusting
-              your search filters or add a new doctor.
-            </p>
+            <Link href="/doctors/new">
+              <Button variant="outline" size="sm" className="mt-2 gap-1.5">
+                <UserPlus className="w-4 h-4" />
+                Register New Doctor
+              </Button>
+            </Link>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-slate-100 bg-slate-50/60 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  <th className="py-3 px-4">Doctor Name</th>
-                  <th className="py-3 px-4">Specialization</th>
-                  <th className="py-3 px-4">Hospital Affiliation</th>
-                  <th className="py-3 px-4">Contact Info</th>
-                  <th className="py-3 px-4 text-center">Assigned Patients</th>
-                  <th className="py-3 px-4">Registered Date</th>
-                  <th className="py-3 px-4 text-right">Actions</th>
+                <tr className="border-b border-slate-200/80 bg-slate-50/75 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  <th className="py-3.5 px-4">Doctor Name</th>
+                  <th className="py-3.5 px-4">Specialization</th>
+                  <th className="py-3.5 px-4">Hospital / Clinic</th>
+                  <th className="py-3.5 px-4">Contact Info</th>
+                  <th className="py-3.5 px-4 text-center">Caseload</th>
+                  <th className="py-3.5 px-4">Registered</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
+              <tbody className="divide-y divide-slate-100">
                 {doctors.map((doctor) => (
                   <tr
                     key={doctor._id}
                     className="hover:bg-slate-50/70 transition-colors group"
                   >
                     <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-2.5">
+                      <Link
+                        href={`/doctors/${doctor._id}`}
+                        className="flex items-center gap-2.5 group/link"
+                      >
                         <div className="w-8 h-8 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
                           {doctor.name.replace(/^Dr\.\s*/, "").charAt(0)}
                         </div>
                         <div>
-                          <span className="font-bold text-slate-900 block group-hover:text-teal-600 transition-colors">
+                          <span className="font-bold text-slate-900 block group-hover/link:text-teal-600 transition-colors">
                             {doctor.name}
                           </span>
                           <span className="text-[11px] text-slate-400">
                             ID: {doctor._id.slice(-6)}
                           </span>
                         </div>
-                      </div>
+                      </Link>
                     </td>
 
                     <td className="py-3.5 px-4">
@@ -240,10 +261,14 @@ function DoctorsContent() {
                     </td>
 
                     <td className="py-3.5 px-4 text-center">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
+                      <Link
+                        href={`/doctors/${doctor._id}`}
+                        className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 font-bold text-xs transition-colors"
+                        title="View assigned patient roster"
+                      >
                         <Users className="w-3 h-3 text-teal-600" />
                         <span>{doctor.patientCount}</span>
-                      </span>
+                      </Link>
                     </td>
 
                     <td className="py-3.5 px-4 text-slate-500 font-medium">
@@ -253,16 +278,19 @@ function DoctorsContent() {
                       </span>
                     </td>
 
+                    {/* Actions: View Professional Profile & Roster (Zero Popups) */}
                     <td className="py-3.5 px-4 text-right">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setSelectedDoctorForPatients(doctor)}
-                        className="text-xs h-8 px-2.5 text-teal-700 border-teal-200 hover:bg-teal-50"
-                      >
-                        <Users className="w-3.5 h-3.5 mr-1 text-teal-600" />
-                        <span>View Patients</span>
-                      </Button>
+                      <Link href={`/doctors/${doctor._id}`}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-8 px-2.5 text-teal-700 border-teal-200 hover:bg-teal-50 gap-1"
+                        >
+                          <User className="w-3.5 h-3.5 text-teal-600" />
+                          <span>View Profile</span>
+                          <ExternalLink className="w-3 h-3 text-teal-400 ml-0.5" />
+                        </Button>
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -317,21 +345,6 @@ function DoctorsContent() {
           </div>
         )}
       </div>
-
-      {/* Modal: Create Doctor */}
-      <DoctorModal
-        isOpen={isAddDoctorOpen}
-        onClose={() => setIsAddDoctorOpen(false)}
-        onSuccess={fetchDoctors}
-      />
-
-      {/* Modal: View & Manage Doctor's Patients */}
-      <DoctorPatientsModal
-        doctor={selectedDoctorForPatients}
-        isOpen={Boolean(selectedDoctorForPatients)}
-        onClose={() => setSelectedDoctorForPatients(null)}
-        onPatientCountChanged={fetchDoctors}
-      />
     </div>
   );
 }
@@ -349,4 +362,3 @@ export default function DoctorsPage() {
     </Suspense>
   );
 }
-

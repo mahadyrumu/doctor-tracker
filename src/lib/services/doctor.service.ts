@@ -148,14 +148,42 @@ export class DoctorService {
     const doctor = await Doctor.findById(id).lean();
     if (!doctor) return null;
 
-    const patientCount = await Patient.countDocuments({
-      doctorId: new mongoose.Types.ObjectId(id),
-    });
+    const docObjectId = new mongoose.Types.ObjectId(id);
+    const [caseloadStats] = await Patient.aggregate([
+      { $match: { doctorId: docObjectId } },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: 1 },
+          critical: {
+            $sum: { $cond: [{ $eq: ["$condition", "Critical"] }, 1, 0] },
+          },
+          serious: {
+            $sum: { $cond: [{ $eq: ["$condition", "Serious"] }, 1, 0] },
+          },
+          stable: {
+            $sum: { $cond: [{ $eq: ["$condition", "Stable"] }, 1, 0] },
+          },
+          discharged: {
+            $sum: { $cond: [{ $eq: ["$condition", "Discharged"] }, 1, 0] },
+          },
+          avgAge: { $avg: "$age" },
+        },
+      },
+    ]);
 
     return {
       ...doctor,
       _id: doctor._id.toString(),
-      patientCount,
+      createdAt: doctor.createdAt
+        ? new Date(doctor.createdAt).toISOString().split("T")[0]
+        : "",
+      patientCount: caseloadStats?.total || 0,
+      criticalCount: caseloadStats?.critical || 0,
+      seriousCount: caseloadStats?.serious || 0,
+      stableCount: caseloadStats?.stable || 0,
+      dischargedCount: caseloadStats?.discharged || 0,
+      averageAge: caseloadStats?.avgAge ? Math.round(caseloadStats.avgAge) : 0,
     };
   }
 

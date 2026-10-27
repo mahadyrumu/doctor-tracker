@@ -18,7 +18,7 @@ A high-performance, clinical-grade administrative web application built with Nex
 
 ## 1. Description
 
-**Doctor Tracker** is a secure administrative healthcare operations platform engineered to give clinical supervisors real-time visibility into hospital staffing and patient admissions. Designed with modern clinical UX standards, the application combines sub-millisecond Edge route protection, instantaneous URL-synchronized filtering, and a unified single-pass aggregation pipeline that computes multi-dimensional caseload metrics in under 15ms. The system supports full lifecycle clinician management, patient assignment and tracking under individual attending doctors, dedicated patient directory management with condition tagging, and interactive data visualization.
+**Doctor Tracker** is a secure administrative healthcare operations platform engineered to give clinical supervisors real-time visibility into hospital staffing and patient admissions. Designed with modern clinical UX standards, the application features a **100% dedicated page architecture (zero popups or modal disruptions)**: every form (doctor registration, patient admission, record editing) and every record (clinician profile, patient clinical profile) resides on its own bookmarkable, shareable URL. The system combines sub-millisecond Edge route protection, instantaneous URL-synchronized filtering, and a unified single-pass aggregation pipeline that computes multi-dimensional caseload metrics in under 15ms. The system supports full lifecycle clinician management, patient assignment and tracking under individual attending doctors, dedicated patient directory management with condition tagging, and interactive data visualization.
 
 ---
 
@@ -287,7 +287,7 @@ We implemented a two-tier synchronization architecture:
 
 ## 5. Visual Evidence
 
-The user interface was crafted following modern clinical design principles: high-contrast typography, atomic component hierarchy, clean slate-and-teal palettes, responsive tables, and intuitive modals.
+The user interface was crafted following modern clinical design principles: high-contrast typography, atomic component hierarchy, clean slate-and-teal palettes, responsive tables, and dedicated full-page workflows (zero popups or modal interruptions).
 
 ### 5.1 Desktop & Mobile Experience
 
@@ -309,8 +309,8 @@ The user interface was crafted following modern clinical design principles: high
 
 ---
 
-#### 3. Doctor Management & Patient Caseload Drawer
-*Clinician directory with debounced search, specialization filter, date range, pagination, doctor creation modal, and side drawer displaying patient rosters with inline add/delete capabilities.*
+#### 3. Doctor Directory & Management (`/doctors`)
+*Clinician directory with debounced search, specialization filter, date range, server pagination, direct link to register doctor (`/doctors/new`), and profile navigation.*
 
 | Desktop View (1440×900) | Mobile View (390×844) |
 | :---: | :---: |
@@ -318,12 +318,30 @@ The user interface was crafted following modern clinical design principles: high
 
 ---
 
-#### 4. Dedicated Patient Management & Roster Filtering
-*Patient directory supporting cross-condition filtering (Critical, Serious, Stable, Discharged), date ranges, live search, edit patient modal with attending doctor reassignment, and delete confirmation.*
+#### 4. Clinician Professional Profile & Patient Caseload Roster (`/doctors/[id]`)
+*Dedicated professional profile featuring clinician credentials, contact lines, 4 caseload KPI metrics (Total, Critical, Serious, Stable/Discharged), and assigned patient roster with inline actions.*
+
+| Desktop View (1440×900) | Mobile View (390×844) |
+| :---: | :---: |
+| ![Doctor Profile Desktop](docs/screenshots/doctor-profile-desktop.png) | <img src="docs/screenshots/doctor-profile-mobile.png" width="300" alt="Doctor Profile Mobile" /> |
+
+---
+
+#### 5. Dedicated Patient Directory (`/patients`)
+*Patient directory supporting cross-condition filtering (Critical, Serious, Stable, Discharged), date ranges, live search, and direct links to register patient (`/patients/new`), edit (`/patients/[id]/edit`), or view full clinical profiles.*
 
 | Desktop View (1440×900) | Mobile View (390×844) |
 | :---: | :---: |
 | ![Patients Desktop](docs/screenshots/patients-desktop.png) | <img src="docs/screenshots/patients-mobile.png" width="300" alt="Patients Mobile" /> |
+
+---
+
+#### 6. Patient Professional Profile & Care Tier Overview (`/patients/[id]`)
+*Dedicated patient profile showcasing clinical condition badge, care tier explanation, length of stay, admission details, attending clinician profile card, and inline record actions.*
+
+| Desktop View (1440×900) | Mobile View (390×844) |
+| :---: | :---: |
+| ![Patient Profile Desktop](docs/screenshots/patient-profile-desktop.png) | <img src="docs/screenshots/patient-profile-mobile.png" width="300" alt="Patient Profile Mobile" /> |
 
 ---
 
