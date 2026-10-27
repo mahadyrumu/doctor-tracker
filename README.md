@@ -366,6 +366,7 @@ Every endpoint conforms to standard REST conventions, returns typed JSON envelop
 | `GET` | `/api/patients/:id` | Fetch single patient profile | URL param `:id` |
 | `PUT` | `/api/patients/:id` | Update patient records & reassign doctor | `{ name, age, gender, condition, phone, doctorId }` |
 | `DELETE` | `/api/patients/:id` | Permanently delete patient record | URL param `:id` |
+| `GET`/`POST` | `/api/seed` | Deterministic cloud database seeder | Optional `?secret=YOUR_JWT_SECRET` |
 
 ---
 
