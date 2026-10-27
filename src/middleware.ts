@@ -8,7 +8,7 @@ const JWT_SECRET = new TextEncoder().encode(
 
 const AUTH_COOKIE_NAME = "dt_session_token";
 
-const PROTECTED_ROUTES = ["/dashboard", "/doctors", "/patients"];
+const PROTECTED_ROUTES = ["/dashboard", "/doctors", "/patients", "/profile"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -61,6 +61,7 @@ export const config = {
     "/dashboard/:path*",
     "/doctors/:path*",
     "/patients/:path*",
+    "/profile/:path*",
   ],
 };
 
