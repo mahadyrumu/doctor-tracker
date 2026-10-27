@@ -143,3 +143,4 @@ export function Sidebar({ onNavClick }: SidebarProps) {
     </aside>
   );
 }
+
