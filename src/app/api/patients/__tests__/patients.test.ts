@@ -4,10 +4,8 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import { Doctor, Patient } from "@/lib/models";
 import {
   GET as getPatientsHandler,
-  POST as createPatientHandler,
 } from "../route";
 import {
-  GET as getPatientHandler,
   PUT as updatePatientHandler,
   DELETE as deletePatientHandler,
 } from "../[id]/route";
@@ -222,3 +220,4 @@ describe("Dedicated Patient Management API (/api/patients)", () => {
     expect(inDb).toBeNull();
   });
 });
+

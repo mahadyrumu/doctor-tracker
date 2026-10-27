@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Filter, Calendar, X } from "lucide-react";
+import { Search, Calendar, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 interface DoctorFilterBarProps {

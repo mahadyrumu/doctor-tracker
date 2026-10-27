@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Edit3, User, Stethoscope, AlertCircle } from "lucide-react";
+import { X, Edit3, User, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import type { PatientWithDoctor } from "@/lib/services/patient.service";
@@ -285,3 +285,4 @@ export function EditPatientModal({
     </div>
   );
 }
+

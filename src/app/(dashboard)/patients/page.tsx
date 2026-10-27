@@ -3,9 +3,7 @@
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Users,
   UserPlus,
-  Calendar,
   Edit2,
   Trash2,
   ChevronLeft,
@@ -356,3 +354,4 @@ export default function PatientsPage() {
     </Suspense>
   );
 }
+

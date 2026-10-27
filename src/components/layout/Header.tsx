@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Menu, Bell, ShieldCheck } from "lucide-react";
+import { Menu } from "lucide-react";
 
 interface HeaderProps {
   onMenuToggle: () => void;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Trash2, X } from "lucide-react";
+import { AlertTriangle, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import type { PatientWithDoctor } from "@/lib/services/patient.service";
@@ -112,3 +112,4 @@ export function DeletePatientDialog({
     </div>
   );
 }
+
