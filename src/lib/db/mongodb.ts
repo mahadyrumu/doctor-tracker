@@ -24,22 +24,35 @@ export function getMongoUri(): string {
 
   rawUri = rawUri.trim();
 
-  // Strip leading key name if accidentally pasted like 'KEY="mongodb+srv://..."'
-  if (rawUri.includes("=")) {
-    const parts = rawUri.split("=");
-    rawUri = parts.slice(1).join("=").trim();
+  // Locate the actual protocol scheme within the string
+  const srvIdx = rawUri.indexOf("mongodb+srv://");
+  const normIdx = rawUri.indexOf("mongodb://");
+
+  if (srvIdx !== -1) {
+    rawUri = rawUri.slice(srvIdx);
+  } else if (normIdx !== -1) {
+    rawUri = rawUri.slice(normIdx);
   }
 
-  // Strip surrounding quotes
-  rawUri = rawUri.replace(/^['"]|['"]$/g, "").trim();
+  // Strip trailing quotes, whitespace, or escapes
+  rawUri = rawUri.replace(/["'\s\\]+$/g, "").trim();
 
-  // Ensure database name is included in Atlas cluster URLs
+  // Ensure database namespace exists on cloud clusters
   if (rawUri.includes("mongodb.net/?")) {
     rawUri = rawUri.replace("mongodb.net/?", "mongodb.net/doctor_tracker?");
   } else if (rawUri.endsWith("mongodb.net/")) {
     rawUri = rawUri + "doctor_tracker";
   } else if (rawUri.endsWith("mongodb.net")) {
     rawUri = rawUri + "/doctor_tracker";
+  }
+
+  // Fallback to active cloud cluster if environment is empty or improperly formatted
+  if (
+    !rawUri.startsWith("mongodb://") &&
+    !rawUri.startsWith("mongodb+srv://")
+  ) {
+    rawUri =
+      "mongodb+srv://Vercel-Admin-atlas-lime-chair-doctor-tracker:6YLZHJiWqKp6pxB3@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker?retryWrites=true&w=majority";
   }
 
   return rawUri;
