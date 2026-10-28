@@ -1,55 +1,57 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { getMongoUri } from "../db/mongodb";
 
-describe("MongoDB URI Resolver & Sanitizer", () => {
+describe("MongoDB URI Resolver & Vercel Integration", () => {
   const originalEnv = { ...process.env };
 
   beforeEach(() => {
-    delete process.env.MONGODB_URI;
-    delete process.env.doctor_tracker_mongodb_atlas_MONGODB_URI;
-    delete process.env.MONGODB_ATLAS_URI;
+    // Clean all mongo-related test keys
+    for (const key of Object.keys(process.env)) {
+      if (key.includes("MONGO")) {
+        delete process.env[key];
+      }
+    }
   });
 
   afterEach(() => {
     process.env = { ...originalEnv };
   });
 
-  it("should preserve a pristine standard connection string", () => {
-    process.env.MONGODB_URI =
-      "mongodb+srv://user:pass@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker?retryWrites=true&w=majority";
-    expect(getMongoUri()).toBe(
-      "mongodb+srv://user:pass@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker?retryWrites=true&w=majority"
-    );
-  });
-
-  it("should inject doctor_tracker namespace when missing on Atlas URLs", () => {
-    process.env.MONGODB_URI =
-      "mongodb+srv://user:pass@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/?retryWrites=true&w=majority";
-    expect(getMongoUri()).toBe(
-      "mongodb+srv://user:pass@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker?retryWrites=true&w=majority"
-    );
-  });
-
-  it("should sanitize accidental variable name prefix and quotes", () => {
-    process.env.MONGODB_URI =
-      'doctor_tracker_mongodb_atlas_MONGODB_URI="mongodb+srv://user:pass@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker?retryWrites=true&w=majority"';
-    expect(getMongoUri()).toBe(
-      "mongodb+srv://user:pass@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker?retryWrites=true&w=majority"
-    );
-  });
-
-  it("should read doctor_tracker_mongodb_atlas_MONGODB_URI when MONGODB_URI is absent", () => {
+  it("should prioritize auto-injected Vercel Storage integration variables", () => {
     process.env.doctor_tracker_mongodb_atlas_MONGODB_URI =
       "mongodb+srv://vercel-user:secret@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/?retryWrites=true&w=majority";
     expect(getMongoUri()).toBe(
-      "mongodb+srv://vercel-user:secret@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker?retryWrites=true&w=majority"
+      "mongodb+srv://vercel-user:secret@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/?retryWrites=true&w=majority"
     );
   });
 
-  it("should fall back to active cloud cluster if environment is missing or completely invalid", () => {
-    process.env.MONGODB_URI = "invalid_garbage_string";
-    const uri = getMongoUri();
-    expect(uri.startsWith("mongodb+srv://")).toBe(true);
-    expect(uri).toContain("atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker");
+  it("should read standard MONGODB_URI when Vercel storage variable is not set", () => {
+    process.env.MONGODB_URI =
+      "mongodb+srv://user:pass@cluster.mongodb.net/doctor_tracker?retryWrites=true&w=majority";
+    expect(getMongoUri()).toBe(
+      "mongodb+srv://user:pass@cluster.mongodb.net/doctor_tracker?retryWrites=true&w=majority"
+    );
+  });
+
+  it("should dynamically detect any custom-prefixed Vercel MongoDB integration key", () => {
+    process.env.my_custom_store_MONGODB_URI =
+      "mongodb+srv://custom:pass@custom-cluster.mongodb.net/?retryWrites=true&w=majority";
+    expect(getMongoUri()).toBe(
+      "mongodb+srv://custom:pass@custom-cluster.mongodb.net/?retryWrites=true&w=majority"
+    );
+  });
+
+  it("should sanitize accidentally pasted key assignment or surrounding quotes", () => {
+    process.env.MONGODB_URI =
+      'doctor_tracker_mongodb_atlas_MONGODB_URI="mongodb+srv://user:pass@cluster.mongodb.net/?retryWrites=true&w=majority"';
+    expect(getMongoUri()).toBe(
+      "mongodb+srv://user:pass@cluster.mongodb.net/?retryWrites=true&w=majority"
+    );
+  });
+
+  it("should throw an actionable error if no MongoDB environment variable is found", () => {
+    expect(() => getMongoUri()).toThrow(
+      "Please define the MONGODB_URI environment variable inside .env or link MongoDB Atlas via Vercel Storage."
+    );
   });
 });

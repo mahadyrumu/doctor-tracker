@@ -16,55 +16,44 @@ if (!cached) {
 }
 
 export function getMongoUri(): string {
-  let rawUri =
-    process.env.MONGODB_URI ||
-    process.env.doctor_tracker_mongodb_atlas_MONGODB_URI ||
-    process.env.MONGODB_ATLAS_URI ||
-    "";
+  // Collect candidate connection strings in order:
+  // 1. Native Vercel Storage integration variable (auto-injected by Vercel Marketplace)
+  // 2. Standard MONGODB_URI (standard / local .env)
+  // 3. Fallback to any dynamically discovered *_MONGODB_URI set by Vercel integrations
+  const candidates: (string | undefined)[] = [
+    process.env.doctor_tracker_mongodb_atlas_MONGODB_URI,
+    process.env.MONGODB_URI,
+    process.env.MONGODB_ATLAS_URI,
+  ];
 
-  rawUri = rawUri.trim();
-
-  // Locate the actual protocol scheme within the string
-  const srvIdx = rawUri.indexOf("mongodb+srv://");
-  const normIdx = rawUri.indexOf("mongodb://");
-
-  if (srvIdx !== -1) {
-    rawUri = rawUri.slice(srvIdx);
-  } else if (normIdx !== -1) {
-    rawUri = rawUri.slice(normIdx);
+  // Discover any custom-prefixed Vercel MongoDB integration key
+  for (const key of Object.keys(process.env)) {
+    if (key.endsWith("_MONGODB_URI") || key.endsWith("MONGODB_URL")) {
+      candidates.push(process.env[key]);
+    }
   }
 
-  // Strip trailing quotes, whitespace, or escapes
-  rawUri = rawUri.replace(/["'\s\\]+$/g, "").trim();
+  for (let candidate of candidates) {
+    if (!candidate || typeof candidate !== "string") continue;
+    candidate = candidate.trim();
 
-  // Ensure database namespace exists on cloud clusters
-  if (rawUri.includes("mongodb.net/?")) {
-    rawUri = rawUri.replace("mongodb.net/?", "mongodb.net/doctor_tracker?");
-  } else if (rawUri.endsWith("mongodb.net/")) {
-    rawUri = rawUri + "doctor_tracker";
-  } else if (rawUri.endsWith("mongodb.net")) {
-    rawUri = rawUri + "/doctor_tracker";
+    // Locate protocol scheme (handles accidental KEY="mongodb://..." copies)
+    const srvIdx = candidate.indexOf("mongodb+srv://");
+    const normIdx = candidate.indexOf("mongodb://");
+    const schemeIdx = srvIdx !== -1 ? srvIdx : normIdx;
+
+    if (schemeIdx !== -1) {
+      return candidate.slice(schemeIdx).replace(/["';\s\\]+$/g, "").trim();
+    }
   }
 
-  // Fallback to active cloud cluster if environment is empty or improperly formatted
-  if (
-    !rawUri.startsWith("mongodb://") &&
-    !rawUri.startsWith("mongodb+srv://")
-  ) {
-    rawUri =
-      "mongodb+srv://Vercel-Admin-atlas-lime-chair-doctor-tracker:6YLZHJiWqKp6pxB3@atlas-lime-chair-doctor.tqlhuzp.mongodb.net/doctor_tracker?retryWrites=true&w=majority";
-  }
-
-  return rawUri;
+  throw new Error(
+    "Please define the MONGODB_URI environment variable inside .env or link MongoDB Atlas via Vercel Storage."
+  );
 }
 
 export async function connectToDatabase(): Promise<typeof mongoose> {
   const uri = getMongoUri();
-  if (!uri) {
-    throw new Error(
-      "Please define the MONGODB_URI environment variable inside .env"
-    );
-  }
 
   if (cached!.conn) {
     return cached!.conn;
@@ -74,6 +63,7 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
     const opts: mongoose.ConnectOptions = {
       bufferCommands: false,
       maxPoolSize: 10,
+      dbName: "doctor_tracker",
     };
 
     cached!.promise = mongoose.connect(uri, opts).then((m) => m);
